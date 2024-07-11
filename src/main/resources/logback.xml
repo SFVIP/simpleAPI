@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <property name="LOGGING_PATTERN"
+        value="%d{HH:mm:ss.SSS} %highlight([%-5level]) [%t] %cyan(%logger{36}) - %msg%n" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOGGING_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="REQUEST_RESPONSE_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/requests_responses.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/archieved/requests_responses.%d.gz</fileNamePattern>
+            <maxHitory>90</maxHitory>
+            <totalSizeCap>10GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOGGING_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="LoggerFilter" level="debug" additivity="false">
+        <appender-ref ref="REQUEST_RESPONSE_FILE" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="REQUEST_RESPONSE_FILE" />
+    </root>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>${LOGGING_PATTERN}</pattern>
+        </layout>
+    </appender>
+
+    <logger name="com.maybank.assessment.api" level="trace" additivity="false">
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+</configuration>
